@@ -1,133 +1,104 @@
 #include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <string.h>
+#include <math.h>
 
-#define ID_LEN 11
-#define PERSONARR_LEN 10
+void filter_and_map(
+    const int arr[],
+    size_t n,
+    int (*filter_f)(int),
+    int (*map_f)(int),
+    int dest[],
+    size_t *dest_cnt);
+int isPositive(int a);
+int addOne(int a);
+int squarePrime(int n);
+int checkBit(int n);
 
-void *initArray(size_t capacity);
-int addPerson(char *name, unsigned short birthYear, uint8_t birthMonth, uint8_t birthDay, bool gender);
-int removePerson(char *id);
-void readPerson();
-int printPerson(char *id);
-void printArr();
-
-typedef struct Person
-{
-    char name[100];
-    char id[ID_LEN];
-    unsigned short birthYear;
-    uint8_t birthMonth;
-    uint8_t birthDay;
-    bool gender;
-} Person;
-
-Person *personArr = NULL;
-size_t index = 0;
+int printEven(int a);
+int isEven(int a);
+int isPrime(int n);
 
 int main(void)
 {
-    printf("%lld\n", sizeof(bool));
-    printf("%lld\n", sizeof(Person));
+    int arr[8] = {1, 2, 3, 4, -1, -2, 11, -100};
+    int dest[10];
+    size_t new_size = 0;
+    filter_and_map(arr, 8, isPositive, addOne, dest, &new_size);
+    filter_and_map(arr, 8, isEven, printEven, dest, &new_size);
+    filter_and_map(arr, 8, isPrime, squarePrime, dest, &new_size);
+    filter_and_map(arr, 8, isPositive, checkBit, dest, &new_size);
+    printf("new_size: %u\n", new_size);
+    for (size_t i = 0; i < new_size; i++)
+        printf("dest[%llu]: %d\n", i, dest[i]);
 
-    personArr = initArray(PERSONARR_LEN);
-    readPerson();
-    readPerson();
-    readPerson();
-    printArr();
-    free(personArr);
     return 0;
 }
 
-void *initArray(size_t capacity)
+void filter_and_map(const int arr[], size_t n, int (*filter_f)(int), int (*map_f)(int), int dest[], size_t *dest_cnt)
 {
-    Person *personArr = malloc(sizeof(*personArr) * capacity);
-    return personArr;
-}
-
-int addPerson(char *name, unsigned short birthYear, uint8_t birthMonth, uint8_t birthDay, bool gender)
-{
-    if (index >= PERSONARR_LEN)
+    if (dest == NULL)
+        return;
+    int filter_f_result = 0;
+    for (size_t i = 0; i < n; i++)
     {
-        printf("IndexOutOfRangeException: The array is already full.\n");
-        return 1;
-    }
-    unsigned short randomNum = 10 + rand() % 100;
-    Person p1 = {
-        name,
-        birthDay + birthMonth + birthYear + randomNum + '\0',
-        birthYear,
-        birthMonth,
-        birthDay,
-        gender};
-    *(personArr + index) = p1;
-    index++;
-    return 0;
-}
-
-int removePerson(char *id)
-{
-    for (size_t i = 0; i < PERSONARR_LEN; i++)
-    {
-        if (strcmp(personArr[i].id, id) == 0)
+        if (!filter_f(arr[i]))
+            continue;
+        else // za true value-tata na filter_f(i) ->
         {
-            *(personArr + i) = *(personArr + index);
-            index--;
-            return 0;
+            *(dest + *dest_cnt) = map_f(arr[i]);
+            (*dest_cnt)++;
         }
     }
-    printf("No such person found in array.\n");
-    return 1;
 }
 
-void readPerson()
+int isPositive(int a)
 {
-    Person p1;
-    printf("Enter a name: ");
-    scanf("%s", p1.name);
-    printf("Enter a birth day: ");
-    scanf("%hhu", &p1.birthDay);
-    printf("Enter a birth month: ");
-    scanf("%hhu", &p1.birthMonth);
-    printf("Enter a birth year: ");
-    scanf("%hu", &p1.birthYear);
-    printf("Enter gender (1 for male, 0 for female): ");
-    scanf("%d", &p1.gender);
-    if (addPerson(p1.name, p1.birthYear, p1.birthMonth, p1.birthDay, p1.gender) == 0)
-        printf("Person added successfull!\n");
+    return a > 0 ? 1 : 0;
 }
 
-int printPerson(char *id)
+int addOne(int a)
 {
-    for (size_t i = 0; i < PERSONARR_LEN; i++)
-    {
-        if (strcmp(personArr[i].id, id) == 0)
+    return ++a;
+}
+
+int squarePrime(int n)
+{
+    return n * n;
+}
+
+int checkBit(int n)
+{
+    int sum = 0;
+    for (size_t i = 0; i < 32; i++)
+        sum += !!(n & (1 << i));
+    return sum;
+}
+
+int printEven(int a)
+{
+    printf("%d ", a);
+    return a;
+}
+
+int isEven(int a)
+{
+    return a % 2 == 0 ? 1 : 0;
+}
+
+int isPrime(int n)
+{
+    int flag = 1;
+
+    // change flag to 0 for non-prime number
+    if (n <= 1)
+        flag = 0;
+
+    for (int i = 2; i <= sqrt(n); ++i)
+        if (n % i == 0)
         {
-            printf("Name: %s\n", personArr[i].name);
-            printf("Id: %s\n", personArr[i].id);
-            printf("BirthDay: %hhu\n", personArr[i].birthDay);
-            printf("BirthMonth: %hhu\n", personArr[i].birthMonth);
-            printf("BirthYear: %hu\n", personArr[i].birthYear);
-            printf("Gender: %d\n", personArr[i].gender);
-            return 0;
+            flag = 0;
+            break;
         }
-    }
-    printf("No such person found in array.\n");
-    return 1;
-}
 
-void printArr()
-{
-    for (size_t i = 0; i < PERSONARR_LEN; i++)
-    {
-        printf("Name: %s\n", personArr[i].name);
-        printf("Id: %s\n", personArr[i].id);
-        printf("BirthDay: %hhu\n", personArr[i].birthDay);
-        printf("BirthMonth: %hhu\n", personArr[i].birthMonth);
-        printf("BirthYear: %hu\n", personArr[i].birthYear);
-        printf("Gender: %d\n", personArr[i].gender);
-        printf("----------------");
-    }
+    // flag is 1 for prime numbers
+    return flag;
 }
