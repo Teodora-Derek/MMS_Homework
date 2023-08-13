@@ -1,45 +1,47 @@
 #include "double_linked_list.h"
-#include "deque.h"
+
+typedef struct Data
+{
+    int num;
+} Data;
+
+void print_data(void *data);
 
 int main(void)
 {
-    // LinkedList *ll = init_linked_list();
-    // push_back(ll, (Data){1});
-    // print_linked_list(*ll);
-    // push_back(ll, (Data){2});
-    // print_linked_list(*ll);
-    // push_back(ll, (Data){3});
-    // print_linked_list(*ll);
-    // push_back(ll, (Data){4});
-    // print_linked_list(*ll);
+    LinkedList *ll = init_linked_list();
+    Data data1 = {.num = 1};
+    Data data2 = {.num = 2};
+    Data data3 = {.num = 3};
+    Data data4 = {.num = 4};
 
-    // Data d;
-    // pop_back(ll, &d);
-    // print_linked_list(*ll);
-    // pop_front(ll, NULL);
-    // print_linked_list(*ll);
-    // pop_front(ll, NULL);
-    // print_linked_list(*ll);
-    // deinit_linked_list(ll);
+    push_front(ll, &data1);
+    print_linked_list(ll, &print_data);
+    push_back(ll, &data2);
+    print_linked_list(ll, &print_data);
+    push_front(ll, &data3);
+    print_linked_list(ll, &print_data);
+    push_back(ll, &data4);
+    print_linked_list(ll, &print_data);
 
-    Deque *deque = init_deque();
-    insertRear(deque, (Data){1});
-    print_deque(*deque);
-    insertRear(deque, (Data){2});
-    print_deque(*deque);
-    insertRear(deque, (Data){3});
-    print_deque(*deque);
-    insertRear(deque, (Data){4});
-    print_deque(*deque);
+    Data *result;
+    result = pop_back(ll);
+    print_linked_list(ll, &print_data);
 
-    Data d;
-    deleteRear(deque, &d);
-    print_deque(*deque);
-    deleteFront(deque, &d);
-    print_deque(*deque);
-    deleteFront(deque, &d);
-    print_deque(*deque);
-    deinit_deque(deque);
+    result = pop_front(ll);
+    print_linked_list(ll, &print_data);
 
+    result = pop_back(ll);
+    print_linked_list(ll, &print_data);
+
+    result = pop_front(ll);
+    print_linked_list(ll, &print_data);
+
+    deinit_linked_list(ll);
     return 0;
+}
+
+void print_data(void *data)
+{
+    printf("%d ", ((Data *)data)->num);
 }

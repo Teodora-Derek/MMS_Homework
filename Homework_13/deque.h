@@ -6,11 +6,11 @@
 typedef LinkedList Deque;
 
 Deque *init_deque();
-int insertFront(Deque *deque, Data data);
-int insertRear(Deque *deque, Data data);
-int deleteFront(Deque *deque, Data *result);
-int deleteRear(Deque *deque, Data *result); 
-void print_deque(Deque deque);
+int insertFront(Deque *deque, void *data);
+int insertRear(Deque *deque, void *data);
+void *deleteFront(Deque *deque);
+void *deleteRear(Deque *deque);
+void print_deque(Deque *deque, void (*print_func)(void *));
 void deinit_deque(Deque *deque);
 
 #endif

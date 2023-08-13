@@ -5,29 +5,29 @@ Deque *init_deque()
     return init_linked_list();
 }
 
-int insertFront(Deque *deque, Data data)
+int insertFront(Deque *deque, void *data)
 {
     return push_front(deque, data);
 }
 
-int insertRear(Deque *deque, Data data)
+int insertRear(Deque *deque, void *data)
 {
     return push_back(deque, data);
 }
 
-int deleteFront(Deque *deque, Data *result)
+void *deleteFront(Deque *deque)
 {
-    return pop_front(deque, result);
+    return pop_front(deque);
 }
 
-int deleteRear(Deque *deque, Data *result)
+void *deleteRear(Deque *deque)
 {
-    return pop_back(deque, result);
+    return pop_back(deque);
 }
 
-void print_deque(Deque deque)
+void print_deque(Deque *deque, void (*print_func)(void *))
 {
-    print_linked_list(deque);
+    print_linked_list(deque, print_func);
 }
 
 void deinit_deque(Deque *deque)

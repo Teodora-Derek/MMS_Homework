@@ -4,14 +4,9 @@
 #ifndef DOUBLE_LINKED_LIST_H
 #define DOUBLE_LINKED_LIST_H 1
 
-typedef struct Data
-{
-    int num;
-} Data;
-
 typedef struct Node
 {
-    Data data;
+    void* data;
     struct Node *prev;
     struct Node *next;
 } Node;
@@ -21,14 +16,15 @@ typedef struct LinkedList
     Node *tail;
     Node *head;
     size_t cur_elem_count;
+    size_t is_dissposed;
 } LinkedList;
 
 LinkedList *init_linked_list();
-int pop_front(LinkedList *linked_list, Data *result);
-int push_front(LinkedList *linked_list, Data data);
-int push_back(LinkedList *linked_list, Data data);
-int pop_back(LinkedList *linked_list, Data *result);
-void print_linked_list(LinkedList linked_list);
+int push_front(LinkedList *linked_list, void *data);
+int push_back(LinkedList *linked_list, void *data);
+void* pop_front(LinkedList *linked_list);
+void* pop_back(LinkedList *linked_list);
+void print_linked_list(LinkedList *linked_list, void (*print_func)(void *));
 void deinit_linked_list(LinkedList *linked_list);
 
 #endif
