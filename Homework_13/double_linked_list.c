@@ -4,7 +4,7 @@ LinkedList *init_linked_list()
 {
     LinkedList *linked_list = malloc(sizeof(*linked_list));
     linked_list->cur_elem_count = 0;
-    linked_list->is_dissposed = 0;
+    linked_list->is_disposed = 0;
     return linked_list;
 }
 
@@ -112,7 +112,7 @@ void *pop_back(LinkedList *linked_list)
 
 void print_linked_list(LinkedList *linked_list, void (*print_func)(void *))
 {
-    if (!linked_list || linked_list->is_dissposed)
+    if (!linked_list || linked_list->is_disposed)
     {
         printf("The linkedlist is already disposed and does not exist!\n");
         return;
@@ -136,9 +136,49 @@ void deinit_linked_list(LinkedList *linked_list)
         free(curr->data);
         free(curr);
     }
-    free(head);
-    head = NULL;
 
-    linked_list->is_dissposed = 1;
+    linked_list->is_disposed = 1;
     free(linked_list);
+}
+
+static void swap(void **a, void **b)
+{
+    void *temp = *a;
+    *a = *b;
+    *b = temp;
+}
+
+static Node *partition(Node *low, Node *high, int (*cmp)(const void *, const void *))
+{
+    void *pivot = high->data;
+    Node *i = low->prev;
+
+    for (Node *j = low; j != high; j = j->next)
+    {
+        if (cmp(j->data, pivot) <= 0)
+        {
+            i = (i == NULL) ? low : i->next;
+            swap(&i->data, &j->data);
+        }
+    }
+
+    i = (i == NULL) ? low : i->next;
+    swap(&i->data, &high->data);
+    return i;
+}
+
+static void quicksort(Node *low, Node *high, int (*cmp)(const void *, const void *))
+{
+    if (high != NULL && low != high && low != high->next)
+    {
+        Node *pivot = partition(low, high, cmp);
+        quicksort(low, pivot->prev, cmp);
+        quicksort(pivot->next, high, cmp);
+    }
+}
+
+// quick sort for sorting the elements of the linked_list using custom cmp function
+void sort_linked_list(LinkedList *linked_list, int (*cmp)(const void *, const void *))
+{
+    quicksort(linked_list->head, linked_list->tail, cmp);
 }

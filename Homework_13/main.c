@@ -26,15 +26,19 @@ int main(void)
 
     Data *result;
     result = pop_back(ll);
+    printf("The returned data is: %d\n", result->num);
     print_linked_list(ll, &print_data);
 
     result = pop_front(ll);
+    printf("The returned data is: %d\n", result->num);
     print_linked_list(ll, &print_data);
 
     result = pop_back(ll);
+    printf("The returned data is: %d\n", result->num);
     print_linked_list(ll, &print_data);
 
     result = pop_front(ll);
+    printf("The returned data is: %d\n", result->num);
     print_linked_list(ll, &print_data);
 
     deinit_linked_list(ll);
