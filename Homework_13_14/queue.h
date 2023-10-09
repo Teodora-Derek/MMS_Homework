@@ -1,7 +1,7 @@
-#include "./ringbuffer.h"
+#include "ringbuffer.h"
 
 #ifndef QUEUE_H
-#define QUEUE_H 1
+#define QUEUE_H 2
 
 typedef struct RingBuffer Queue;
 
